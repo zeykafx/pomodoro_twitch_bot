@@ -22,3 +22,8 @@ When running the bot locally, it will read chat and respond to commands. It also
 - `[prefix]pomo chat/silent/silence/mod`: stops the bot from discouraging the user to focus.
 - `[prefix]pomo add/plus OR remove/minus [time]`: adds or removes time to the user's pomo.
 When you see a `/` here it means that either works and do the same thing.
+
+# Credits
+This bot was made by ZeykaFX, originally made to be used by [ellenbearli](https://www.twitch.tv/ellenbearli). 
+
+It was heavily inspired by [RumpleStudy](https://www.twitch.tv/rumplestudy)'s private pomo bot.
