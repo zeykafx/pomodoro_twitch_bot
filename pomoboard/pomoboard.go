@@ -40,7 +40,7 @@ func StartPomoBoard() {
 		if err != nil {
 			panic(err)
 		} // overwrite the whole file every 5 seconds
-		time.Sleep(5)
+		time.Sleep(time.Second * 5)
 	}
 
 }
