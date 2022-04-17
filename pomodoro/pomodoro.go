@@ -69,7 +69,7 @@ func HandlePomoCommand(bot *twitch_api_wrapper.Bot, message *twitch_api_wrapper.
 		pomo.Username = message.User.Name
 
 		// make the pomo silent for the broadcaster but not for other users
-		if pomo.Username == consts.Channel {
+		if strings.ToLower(pomo.Username) == consts.Channel {
 			pomo.Silent = true
 		} else {
 			pomo.Silent = false
