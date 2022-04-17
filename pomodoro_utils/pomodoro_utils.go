@@ -52,7 +52,7 @@ func CheckUserPomoDb(message *twitch_api_wrapper.Message) {
 	timeLeft := time.Until(time.Unix(endTimestampInt, 0)).Minutes()
 
 	if timeLeft > 0 && !pomo.Silent {
-		err := message.Reply(fmt.Sprintf("You can do it @%s! You have %v minutes left on your pomodoro session", message.User.Name, math.Round(timeLeft)))
+		err := message.Reply(fmt.Sprintf("You can do it @%s! You have %v minutes left on your pomodoro session! Use %spomo chat to stop those reminders", message.User.Name, math.Round(timeLeft), consts.Prefix))
 		if err != nil {
 			log.Fatalln(err)
 		}

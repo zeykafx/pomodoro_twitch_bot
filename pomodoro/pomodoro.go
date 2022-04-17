@@ -67,12 +67,13 @@ func HandlePomoCommand(bot *twitch_api_wrapper.Bot, message *twitch_api_wrapper.
 
 		// set username to message author
 		pomo.Username = message.User.Name
-		// if pomo.Username == "ellenbearli" {
-		// 	pomo.Silent = true
-		// } else {
-		// 	pomo.Silent = false
-		// }
-		pomo.Silent = true // made it silent by default
+
+		// make the pomo silent for the broadcaster but not for other users
+		if pomo.Username == consts.Channel {
+			pomo.Silent = true
+		} else {
+			pomo.Silent = false
+		}
 
 		// get the timestamp of now + pomoDuration aka the pomo end time
 		endTime := time.Now().Add(time.Minute * time.Duration(pomoDuration))
