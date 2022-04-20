@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"log"
 	"math"
+	"pomodoro_twitch_bot/consts"
+	"pomodoro_twitch_bot/twitch_api_wrapper"
 	"strconv"
 	"time"
-	"twitch_bot/consts"
-	"twitch_bot/twitch_api_wrapper"
 )
 
 type Pomo struct {

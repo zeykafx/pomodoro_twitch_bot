@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"github.com/joho/godotenv"
 	"os"
-	"twitch_bot/logger"
-	"twitch_bot/setup"
+	"pomodoro_twitch_bot/logger"
+	"pomodoro_twitch_bot/setup"
 )
 
 var (

@@ -1,11 +1,11 @@
 package main
 
 import (
-	"twitch_bot/consts"
-	"twitch_bot/help_commands"
-	"twitch_bot/pomoboard"
-	"twitch_bot/pomobot"
-	"twitch_bot/pomodoro"
+	"pomodoro_twitch_bot/consts"
+	"pomodoro_twitch_bot/help_commands"
+	"pomodoro_twitch_bot/pomoboard"
+	"pomodoro_twitch_bot/pomobot"
+	"pomodoro_twitch_bot/pomodoro"
 )
 
 func initCommands() {

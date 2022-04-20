@@ -5,11 +5,11 @@ import (
 	"github.com/joho/godotenv"
 	"log"
 	"os"
+	"pomodoro_twitch_bot/consts"
+	"pomodoro_twitch_bot/logger"
+	"pomodoro_twitch_bot/pomodoro_utils"
+	"pomodoro_twitch_bot/twitch_api_wrapper"
 	"strings"
-	"twitch_bot/consts"
-	"twitch_bot/logger"
-	"twitch_bot/pomodoro_utils"
-	"twitch_bot/twitch_api_wrapper"
 )
 
 var (

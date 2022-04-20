@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"io/ioutil"
 	"math"
+	"pomodoro_twitch_bot/pomodoro_utils"
 	"strconv"
 	"time"
-	"twitch_bot/pomodoro_utils"
 )
 
 var Running bool = true

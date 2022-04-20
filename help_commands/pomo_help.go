@@ -3,9 +3,9 @@ package help_commands
 import (
 	"fmt"
 	"strings"
-	"twitch_bot/consts"
-	"twitch_bot/pomobot"
-	"twitch_bot/twitch_api_wrapper"
+	"pomodoro_twitch_bot/consts"
+	"pomodoro_twitch_bot/pomobot"
+	"pomodoro_twitch_bot/twitch_api_wrapper"
 )
 
 // commands:
