@@ -27,7 +27,7 @@ When you see a `/` here it means that either works and do the same thing.
 
 # Images
 
-<img src="C:\Users\coren\Code\pomodoro_twitch_bot\images\main_with_pomo.png" width="60%"/>
+<img src="images\main_with_pomo.png" width="60%"/>
 
 # Credits
 This bot was made by ZeykaFX, originally made to be used by [ellenbearli](https://www.twitch.tv/ellenbearli). 
