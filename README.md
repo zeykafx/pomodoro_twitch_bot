@@ -8,7 +8,9 @@ Download the archive from the releases on the right, unzip it, and run twitch_bo
 
 You will need a second twitch account, this will be your bot. Head over to https://twitchapps.com/tmi/, connect with the bot account and copy the token you see, it should look like `oauth:xxxxxxxxxxxx`.
 
-Next, run the executable, and complete the first time setup.
+Next, run the executable, and fill in the settings (click on the cog wheel, top right of the gui).
+
+If you want to turn on the pomo board, make sure to press the "start board" button.
 
 Your bot should be working, enjoy!
 
@@ -22,6 +24,10 @@ When running the bot locally, it will read chat and respond to commands. It also
 - `[prefix]pomo chat/silent/silence/mod`: stops the bot from discouraging the user to focus.
 - `[prefix]pomo add/plus OR remove/minus [time]`: adds or removes time to the user's pomo.
 When you see a `/` here it means that either works and do the same thing.
+
+# Images
+
+<img src="C:\Users\coren\Code\pomodoro_twitch_bot\images\main_with_pomo.png" width="60%"/>
 
 # Credits
 This bot was made by ZeykaFX, originally made to be used by [ellenbearli](https://www.twitch.tv/ellenbearli). 
