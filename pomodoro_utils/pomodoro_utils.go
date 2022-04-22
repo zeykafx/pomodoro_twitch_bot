@@ -11,6 +11,8 @@ import (
 	"time"
 )
 
+var Running bool = true
+
 type Pomo struct {
 	Username     string `json:"username"`
 	Duration     int    `json:"pomoDuration"`
@@ -60,7 +62,7 @@ func CheckUserPomoDb(message *twitch_api_wrapper.Message) {
 }
 
 func PomoLoop(bot *twitch_api_wrapper.Bot) {
-	for {
+	for Running {
 		allPomos := FetchDbPomos()
 		for _, currentPomo := range allPomos {
 

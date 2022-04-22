@@ -5,6 +5,7 @@ import (
 	"os"
 )
 
+// FirstTimeSetup is not used anymore, the setup is done in the gui
 func FirstTimeSetup() {
 	var token, prefix, channel string
 
@@ -32,9 +33,20 @@ func FirstTimeSetup() {
 		panic(err)
 	}
 
-	file, err := os.Create(".env")
+	err = WriteSettingsToFile(token, prefix, channel)
 	if err != nil {
 		panic(err)
+	}
+
+	fmt.Println("Setup complete! The bot will begin writing the running pomos to \"pomoboard.txt\" which you have to import in OBS.")
+	fmt.Println("Thanks for installing, enjoy! - Zeyka.")
+}
+
+// WriteSettingsToFile is used to set the settings by the gui
+func WriteSettingsToFile(token string, prefix string, channel string) error {
+	file, err := os.Create(".env")
+	if err != nil {
+		return err
 	}
 	defer func(file *os.File) {
 		err := file.Close()
@@ -45,19 +57,18 @@ func FirstTimeSetup() {
 
 	_, err = file.WriteString(fmt.Sprintf("TOKEN=\"%s\"\n", token))
 	if err != nil {
-		panic(err)
+		return err
 	}
 
 	_, err = file.WriteString(fmt.Sprintf("PREFIX=\"%s\"\n", prefix))
 	if err != nil {
-		panic(err)
+		return err
 	}
 
 	_, err = file.WriteString(fmt.Sprintf("CHANNEL=\"%s\"\n", channel))
 	if err != nil {
-		panic(err)
+		return err
 	}
 
-	fmt.Println("Setup complete! The bot will begin writing the running pomos to \"pomoboard.txt\" which you have to import in OBS.")
-	fmt.Println("Thanks for installing, enjoy! - Zeyka.")
+	return nil
 }

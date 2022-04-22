@@ -9,7 +9,7 @@ type EventHandler struct {
 }
 
 type Bot struct {
-	client   *Client
+	Client   *Client
 	host     string
 	onLogin  func(*Bot)
 	events   EventHandler
@@ -41,7 +41,7 @@ func ParseMessage(command *Command, bot *Bot) *Message {
 
 func NewBot(token string, nick string, channels []string) *Bot {
 	client := Client{Token: token, Nick: nick}
-	return &Bot{client: &client, host: "irc.chat.twitch.tv:6667", events: EventHandler{}, channels: channels}
+	return &Bot{Client: &client, host: "irc.chat.twitch.tv:6667", events: EventHandler{}, channels: channels}
 }
 
 func (message *Message) Reply(msg string) error {
@@ -70,7 +70,7 @@ func (message *Message) Ban() error {
 
 func (event *EventHandler) configure(bot *Bot) {
 
-	bot.client.AddHandler("PRIVMSG", func(command *Command) bool {
+	bot.Client.AddHandler("PRIVMSG", func(command *Command) bool {
 		message := ParseMessage(command, bot)
 		for _, handler := range event.messageHandlers {
 			go handler(bot, message)
@@ -85,7 +85,7 @@ func (bot *Bot) OnLogin(f func(*Bot)) {
 }
 
 func (bot *Bot) SendMessage(message *Message) error {
-	err := bot.client.Send(&Command{Command: "PRIVMSG", Args: []string{"#" + message.Channel}, Suffix: message.Message})
+	err := bot.Client.Send(&Command{Command: "PRIVMSG", Args: []string{"#" + message.Channel}, Suffix: message.Message})
 	if err != nil {
 		return err
 	}
@@ -101,7 +101,7 @@ func (bot *Bot) DeleteMessage(message *Message) error {
 }
 
 func (bot *Bot) Join(channel string) error {
-	err := bot.client.Join("#" + channel)
+	err := bot.Client.Join("#" + channel)
 	if err != nil {
 		return err
 	}
@@ -129,7 +129,7 @@ func (bot *Bot) OnMessage(f func(*Bot, *Message)) {
 }
 
 func (bot *Bot) GetClient() *Client {
-	return bot.client
+	return bot.Client
 }
 
 func (bot *Bot) Run() {
@@ -142,28 +142,28 @@ func (bot *Bot) Run() {
 }
 
 func (bot *Bot) Start() error {
-	defer bot.client.Close()
-	err := bot.client.Connect(bot.host)
+	defer bot.Client.Close()
+	err := bot.Client.Connect(bot.host)
 	if err != nil {
 		return err
 	}
 
-	err = bot.client.Auth()
+	err = bot.Client.Auth()
 	if err != nil {
 		return err
 	}
 
 	bot.events.configure(bot)
 
-	bot.client.AddHandler("PING", func(command *Command) bool {
-		err := bot.client.Send(&Command{Command: "PONG", Suffix: "tmi.twitch.tv"})
+	bot.Client.AddHandler("PING", func(command *Command) bool {
+		err := bot.Client.Send(&Command{Command: "PONG", Suffix: "tmi.twitch.tv"})
 		if err != nil {
 			return false
 		}
 		return true
 	})
 
-	bot.client.AddHandler("376", func(command *Command) bool {
+	bot.Client.AddHandler("376", func(command *Command) bool {
 		err = bot.GetClient().CapReq("twitch.tv/tags twitch.tv/commands")
 		if err != nil {
 			return false
@@ -180,7 +180,7 @@ func (bot *Bot) Start() error {
 		return true
 	})
 
-	err = bot.client.Handle()
+	err = bot.Client.Handle()
 	if err != nil {
 		return err
 	}

@@ -113,7 +113,7 @@ func HandlePomoCommand(bot *twitch_api_wrapper.Bot, message *twitch_api_wrapper.
 			err = message.Reply("You won't be reminded to focus for this pomo.")
 			pomobot.CheckErr(err)
 
-		} else if splitCommand[1] == "add" || splitCommand[1] == "plus" { // ADD TIME TO POMO
+		} else if splitCommand[1] == "add" || splitCommand[1] == "plus" || splitCommand[1] == "+" { // ADD TIME TO POMO
 			if timeToAdd, err := strconv.Atoi(splitCommand[2]); len(splitCommand) >= 3 && err == nil {
 
 				changePomoTime(message.User.Name, timeToAdd, bot)
@@ -123,7 +123,7 @@ func HandlePomoCommand(bot *twitch_api_wrapper.Bot, message *twitch_api_wrapper.
 				err := bot.Send(consts.Channel, msg)
 				pomobot.CheckErr(err)
 			}
-		} else if splitCommand[1] == "remove" || splitCommand[1] == "minus" { // REMOVES TIME TO POMO
+		} else if splitCommand[1] == "remove" || splitCommand[1] == "minus" || splitCommand[1] == "-" { // REMOVES TIME TO POMO
 			if timeToAdd, err := strconv.Atoi(splitCommand[2]); len(splitCommand) >= 3 && err == nil {
 
 				changePomoTime(message.User.Name, -timeToAdd, bot)
@@ -133,6 +133,10 @@ func HandlePomoCommand(bot *twitch_api_wrapper.Bot, message *twitch_api_wrapper.
 				err := bot.Send(consts.Channel, msg)
 				pomobot.CheckErr(err)
 			}
+		} else if splitCommand[1] == "help" {
+			// send help message for the pomo command
+			err := message.Reply(fmt.Sprintf("To start your own pomodoro timer use \"%spomo time task (optional)\", to end your timer early use \"%spomo end\", to check your timer use \"%spomo check\", if you don't want the bot to warn when talking with a timer running use \"%spomo chat\", and to change the timer use \"%spomo add/remove time\"", consts.Prefix, consts.Prefix, consts.Prefix, consts.Prefix, consts.Prefix))
+			pomobot.CheckErr(err)
 		}
 	}
 }

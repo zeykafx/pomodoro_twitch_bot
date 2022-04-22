@@ -1,0 +1,30 @@
+.Header {
+  padding: 10px;
+  border-radius: 0 0 5px 5px;
+  background: rgb(60,86,97);
+  background: linear-gradient(90deg, rgba(60,86,97,1) 0%, rgba(31,54,77,1) 56%);
+  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16), 0 0 0 1px rgba(0, 0, 0, 0.08);
+}
+
+.MainContent {
+  margin: 1rem;
+}
+
+.info-card {
+  padding: 10px;
+  margin: 1rem 0 1rem 0;
+  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16), 0 0 0 1px rgba(0, 0, 0, 0.08);
+}
+
+.pomo-list {
+  padding-left: 8px;
+  max-height:100px;
+  overflow: auto;
+}
+
+.ON {
+  color: green;
+}
+.OFF {
+   color: red;
+ }
