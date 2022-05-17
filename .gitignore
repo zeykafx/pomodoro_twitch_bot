@@ -29,3 +29,5 @@ bind_windows_amd64.go
 
 
 output/
+
+Gui/build/
