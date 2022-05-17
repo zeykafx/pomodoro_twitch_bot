@@ -76,9 +76,7 @@ export default function Settings() {
 
     useEffect(() => {
         astilectron.sendMessage({name: "GET_SETTINGS", payload: ""}, (message: any) => {
-            console.log(message["payload"])
             let jsonMessage = JSON.parse(message["payload"])
-            console.log(jsonMessage)
             setToken(jsonMessage["token"])
             setPrefix(jsonMessage["prefix"])
             setChannel(jsonMessage["channel"])
@@ -151,6 +149,7 @@ export default function Settings() {
             </Snackbar>
 
             <Card variant={"outlined"} className={"settings-card"}>
+                <Typography variant="h5" sx={{pb: 1}}>Settings</Typography>
                 <Grid
                     container
                     direction="column"
@@ -160,7 +159,7 @@ export default function Settings() {
                 >
                     {/* OAUTH TOKEN ------------------------*/}
                     <Grid item>
-                        <Typography variant="h6">Auth token: </Typography>
+                        <Typography variant="h6">Auth token</Typography>
                     </Grid>
 
                     <Grid item>
@@ -193,7 +192,7 @@ export default function Settings() {
                                 <Typography variant="body1">
                                     Enter the token that you got from{" "}
                                     <a onClick={openExternalBrowser} href={"https://twitchapps.com/tmi/"}>
-                                        https://twitchapps.com/tmi/
+                                        twitchapps.com/tmi/
                                     </a>
                                 </Typography>
                             </Grid>
@@ -202,7 +201,7 @@ export default function Settings() {
 
                     {/* PREFIX ------------------------ */}
                     <Grid item>
-                        <Typography variant="h6">Command Prefix: </Typography>
+                        <Typography variant="h6">Command Prefix</Typography>
                     </Grid>
 
                     <Grid item>
@@ -238,7 +237,7 @@ export default function Settings() {
 
                     {/* Channel ------------------------ */}
                     <Grid item>
-                        <Typography variant="h6">Channel: </Typography>
+                        <Typography variant="h6">Channel</Typography>
                     </Grid>
 
                     <Grid item>

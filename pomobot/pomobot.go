@@ -13,7 +13,7 @@ import (
 )
 
 var (
-	Bot            *twitch_api_wrapper.Bot
+	//Bot            *twitch_api_wrapper.Bot
 	commandHandler CommandHandler = CommandHandler{commandHandlers: map[string]func(*twitch_api_wrapper.Bot, *twitch_api_wrapper.Message){}} // init empty map
 )
 
@@ -34,15 +34,15 @@ func InitBot() {
 	TOKEN := os.Getenv("TOKEN")
 
 	// creating the bot
-	Bot = twitch_api_wrapper.NewBot(TOKEN, "pomobot", []string{consts.Channel})
+	consts.Bot = twitch_api_wrapper.NewBot(TOKEN, "pomobot", []string{consts.Channel})
 
-	Bot.OnLogin(func(bot *twitch_api_wrapper.Bot) {
+	consts.Bot.OnLogin(func(bot *twitch_api_wrapper.Bot) {
 		logger.Log("Logged in!")
-		go pomodoro_utils.PomoLoop(Bot)
+		go pomodoro_utils.PomoLoop(consts.Bot)
 	})
 
 	// reacts to all the commands and log them
-	Bot.OnMessage(func(bot *twitch_api_wrapper.Bot, message *twitch_api_wrapper.Message) {
+	consts.Bot.OnMessage(func(bot *twitch_api_wrapper.Bot, message *twitch_api_wrapper.Message) {
 		logger.Log(fmt.Sprintf("'%s' sent '%s'", message.User.Name, message.Message))
 
 		// if the message is not a command
@@ -59,7 +59,7 @@ func InitBot() {
 		}
 	})
 	// run the bot
-	Bot.Run()
+	consts.Bot.Run()
 }
 
 // Accept is used to add a function as a command handler

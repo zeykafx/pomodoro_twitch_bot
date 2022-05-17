@@ -1,17 +1,90 @@
 import {Button, Card, Grid, Tooltip, Typography} from '@mui/material'
-import React, {Component} from 'react'
+import PomoGrid from "../Components/PomoGrid";
+import {useEffect, useState} from "react";
+import {Pomo} from "./App";
+
+export declare const astilectron: any;
 
 interface IDashBoardProps {
-    botStatus: boolean,
-    boardStarted: boolean,
-    pomoNbr: number,
-    pomos: string,
-    startWritingFile: () => void,
-    stopWritingFile: () => void,
+    astielectronReady: boolean
 }
 
 export default function DashBoard(props: IDashBoardProps) {
-    let {botStatus, boardStarted, pomoNbr, pomos, startWritingFile, stopWritingFile} = props;
+    const [botStatus, setBotStatus] = useState<boolean>(false); // false == off, true == on
+    const [pomos, setPomos] = useState<Array<Pomo>>([]);
+    const [pomoNbr, setPomosNbr] = useState<number>(0);
+    const [boardStarted, setBoardStarted] = useState<boolean>(false);
+
+    useEffect(() => {
+        // get the status on page load
+        if (props.astielectronReady) {
+            getBotStatus();
+            getPomos();
+        }
+
+        // then refresh the data every 5 seconds
+        setInterval(() => {
+            getBotStatus();
+            getPomos();
+        }, 5000);
+    }, []);
+
+
+    // get pomo info ----------
+    const getBotStatus = () => {
+        astilectron.sendMessage(
+            {name: "STATUS", payload: "STATUS"},
+            function (message: any) {
+                if (message["payload"] === "on") {
+                    setBotStatus(true);
+                } else {
+                    setBotStatus(false);
+                }
+            }
+        );
+    };
+
+    const getPomos = () => {
+        astilectron.sendMessage(
+            {name: "RUNNING_POMOS", payload: "RUNNING_POMOS"},
+            function (message: any) {
+                let jsonPomos = JSON.parse(message["payload"])
+                if (jsonPomos !== null) {
+                    jsonPomos.map((pomo: Pomo) => {
+                        pomo.time_left = Math.round(pomo.time_left)
+                    })
+                    setPomos(jsonPomos);
+                    setPomosNbr(jsonPomos.length);
+                } else {
+                    setPomos([])
+                    setPomosNbr(0);
+                }
+            }
+        );
+    };
+
+    // start and stop writing to file ------
+    const startWritingFile = () => {
+        astilectron.sendMessage(
+            {name: "START_FILE", payload: "start writing file "},
+            function (message: any) {
+                if (message["payload"] === "Started writing to file!") {
+                    setBoardStarted(true);
+                }
+            }
+        );
+    };
+
+    const stopWritingFile = () => {
+        astilectron.sendMessage(
+            {name: "STOP_FILE", payload: "stop writing file "},
+            function (message: any) {
+                if (message["payload"] === "Stopped writing to file!") {
+                    setBoardStarted(false);
+                }
+            }
+        );
+    };
 
     return (
         <div className={"MainContent"}>
@@ -40,7 +113,7 @@ export default function DashBoard(props: IDashBoardProps) {
                     </Grid>
 
                     <Grid item xs>
-                        <Tooltip title={"Number of active pomodoros"} enterDelay={500}>
+                        <Tooltip title={"Number of active pomos"} enterDelay={500}>
                             <Typography variant={"h6"}>
                                 Number of pomos: {pomoNbr}
                             </Typography>
@@ -54,9 +127,7 @@ export default function DashBoard(props: IDashBoardProps) {
                 <Typography variant={"h6"}>Pomos running:</Typography>
                 <div className={"pomo-list"}>
                     {pomos.length > 0 ?
-                        pomos.split("\n").map((pomo) =>
-                            <Typography variant={"body1"} key={pomo}>{pomo}</Typography>
-                        )
+                        <PomoGrid pomos={pomos} setPomos={setPomos}/>
                         : "No pomos running"
                     }
 
@@ -86,7 +157,6 @@ export default function DashBoard(props: IDashBoardProps) {
                     </Grid>
 
                 </Grid>
-
             </Card>
 
         </div>

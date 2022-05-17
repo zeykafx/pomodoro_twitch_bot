@@ -7,10 +7,12 @@ import (
 	"github.com/joho/godotenv"
 	"os"
 	"pomodoro_twitch_bot/logger"
+	"pomodoro_twitch_bot/twitch_api_wrapper"
 	"time"
 )
 
 var (
+	Bot     *twitch_api_wrapper.Bot
 	Prefix  string = "!"
 	Channel string = ""
 )

@@ -1,9 +1,7 @@
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import "./App.css";
 import {
     Alert,
-    Button,
-    Card,
     Grid,
     IconButton, Snackbar,
     Tooltip,
@@ -15,7 +13,17 @@ import DashBoard from "./DashBoard";
 import Settings from "./Settings";
 
 export declare const astilectron: any;
-let astielectron_ready = false;
+let astielectronReady = false;
+
+export interface Pomo {
+    id: number,
+    username: string,
+    task: string,
+    end_timestamp: string,
+    pomoDuration: number,
+    silent: boolean,
+    time_left: number
+}
 
 function App() {
 
@@ -27,89 +35,19 @@ function App() {
             if (message["name"] === "connected") {
                 console.log("Connected to go backend!");
                 return "Connected";
-            }
-            else if (message["name"] === "NO SETTINGS") {
+            } else if (message["name"] === "NO SETTINGS") {
                 setSettingsAlert(true);
                 return "showed alert";
             }
 
         });
-        astielectron_ready = true;
+        astielectronReady = true;
     });
 
-    const [botStatus, setBotStatus] = useState<boolean>(false); // false == off, true == on
-    const [pomos, setPomos] = useState<string>("");
-    const [pomoNbr, setPomosNbr] = useState<number>(0);
-    const [boardStarted, setBoardStarted] = useState<boolean>(false);
 
     const [settingsAlert, setSettingsAlert] = useState<boolean>(false);
-
     const [currentPage, setCurrentPage] = useState<number>(0); // 0 = dashboard, 1 = settings
 
-    // get pomo info
-
-    const getBotStatus = () => {
-        astilectron.sendMessage(
-            {name: "STATUS", payload: "STATUS"},
-            function (message: any) {
-                if (message["payload"] === "on") {
-                    setBotStatus(true);
-                } else {
-                    setBotStatus(false);
-                }
-            }
-        );
-    };
-
-    const getPomos = () => {
-        astilectron.sendMessage(
-            {name: "RUNNING_POMOS", payload: "RUNNING_POMOS"},
-            function (message: any) {
-                setPomos(message["payload"]);
-                setPomosNbr(message["payload"].split("\n").length - 1);
-            }
-        );
-    };
-
-    // start and stop writing to file ------
-
-    const startWritingFile = () => {
-        astilectron.sendMessage(
-            {name: "START_FILE", payload: "start writing file "},
-            function (message: any) {
-                console.log(message["payload"]);
-                if (message["payload"] === "Started writing to file!") {
-                    setBoardStarted(true);
-                }
-            }
-        );
-    };
-
-    const stopWritingFile = () => {
-        astilectron.sendMessage(
-            {name: "STOP_FILE", payload: "stop writing file "},
-            function (message: any) {
-                console.log(message["payload"]);
-                if (message["payload"] === "Stopped writing to file!") {
-                    setBoardStarted(false);
-                }
-            }
-        );
-    };
-
-    useEffect(() => {
-        // get the status on page load
-        if (astielectron_ready) {
-            getBotStatus();
-            getPomos();
-        }
-
-        // then refresh the data every 5 seconds
-        setInterval(() => {
-            getBotStatus();
-            getPomos();
-        }, 5000);
-    }, []);
 
     return (
         <>
@@ -130,7 +68,7 @@ function App() {
                     onClose={() => setSettingsAlert(false)}
                     severity="error"
                     sx={{
-                        width: "100%", fontSize: "42px"
+                        width: "80%", fontSize: "42px"
                     }}
                 >
                     <Typography variant={"h6"} component="div">
@@ -171,15 +109,10 @@ function App() {
 
                 {currentPage === 0 ? (
                     <DashBoard
-                        botStatus={botStatus}
-                        boardStarted={boardStarted}
-                        pomoNbr={pomoNbr}
-                        pomos={pomos}
-                        startWritingFile={startWritingFile}
-                        stopWritingFile={stopWritingFile}
+                        astielectronReady={astielectronReady}
                     />
                 ) : (
-                    <Settings />
+                    <Settings/>
                 )}
             </div>
         </>

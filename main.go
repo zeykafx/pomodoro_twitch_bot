@@ -111,7 +111,7 @@ func main() {
 			MessageHandler: handleMessages,
 			Options: &astilectron.WindowOptions{
 				Center:          astikit.BoolPtr(true),
-				Height:          astikit.IntPtr(600),
+				Height:          astikit.IntPtr(670),
 				Width:           astikit.IntPtr(800),
 				AutoHideMenuBar: astikit.BoolPtr(true),
 				Title:           astikit.StrPtr("Pomodoro Bot"),
@@ -120,5 +120,4 @@ func main() {
 	}); err != nil {
 		l.Fatal(fmt.Errorf("running bootstrap failed: %w", err))
 	}
-
 }

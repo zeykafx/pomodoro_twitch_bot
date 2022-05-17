@@ -60,9 +60,42 @@ func handleMessages(w *astilectron.Window, m bootstrap.MessageIn) (payload inter
 		if err != nil {
 			panic(err)
 		}
-		fmt.Println(payload)
-		stringRepr := getRunningPomos() // get all the pomos as a string and return that to the app
-		return stringRepr, nil
+		allPomosWithTimeLeft := getRunningPomos()
+		jsonRepr, err := json.Marshal(allPomosWithTimeLeft)
+		if err != nil {
+			panic(err)
+		}
+		return string(jsonRepr), nil
+
+	case "EDIT_TASK":
+		var payload string
+		err := json.Unmarshal(m.Payload, &payload)
+		if err != nil {
+			panic(err)
+		}
+		var editedPomo UsernameAndTask
+		err = json.Unmarshal([]byte(payload), &editedPomo)
+		if err != nil {
+			panic(err)
+		}
+		err = pomodoro_utils.EditUserPomo(editedPomo.Username, editedPomo.NewTask, true)
+		if err != nil {
+			return "NOT OK", err
+		}
+		return "OK", err
+
+	case "DELETE_POMO":
+		var payload string
+		err := json.Unmarshal(m.Payload, &payload)
+		if err != nil {
+			panic(err)
+		}
+		err = pomodoro_utils.TerminatePomo(payload, true)
+
+		if err != nil {
+			return err, err
+		}
+		return "OK", nil
 
 	case "STATUS":
 		var payload string
@@ -70,7 +103,6 @@ func handleMessages(w *astilectron.Window, m bootstrap.MessageIn) (payload inter
 		if err != nil {
 			panic(err)
 		}
-		fmt.Println(payload)
 		var status string
 		// dammit I want my ternary operator
 		if pomodoro_utils.Running {
@@ -81,7 +113,6 @@ func handleMessages(w *astilectron.Window, m bootstrap.MessageIn) (payload inter
 		return status, nil
 
 	case "SET_SETTINGS":
-
 		var payload string
 		err := json.Unmarshal(m.Payload, &payload)
 		if err != nil {
@@ -141,6 +172,11 @@ func openbrowser(url string) {
 	}
 }
 
+type UsernameAndTask struct {
+	Username string `json:"username"`
+	NewTask  string `json:"new_task"`
+}
+
 type settingsJson struct {
 	Token   string `json:"token"`
 	Prefix  string `json:"prefix"`
@@ -149,33 +185,34 @@ type settingsJson struct {
 
 type PomoWithTimeLeft struct {
 	pomodoro_utils.Pomo
+	Id       int     `json:"id"`
 	TimeLeft float64 `json:"time_left"`
 }
 
-func getRunningPomos() string {
+func getRunningPomos() []PomoWithTimeLeft {
 	allPomos := pomodoro_utils.FetchDbPomos()
 	var allPomosWithTimeLeft []PomoWithTimeLeft
-	for _, pomo := range allPomos {
+	for index, pomo := range allPomos {
 		endTimestampInt, _ := strconv.ParseInt(pomo.EndTimestamp, 10, 64)
 		timeLeft := time.Until(time.Unix(endTimestampInt, 0)).Minutes()
 		currPomo := PomoWithTimeLeft{
-			pomo, timeLeft,
+			pomo, index, timeLeft,
 		}
 		allPomosWithTimeLeft = append(allPomosWithTimeLeft, currPomo)
 	}
-
-	var stringRepr string
-	for _, pomoWithTimeLeft := range allPomosWithTimeLeft {
-		stringRepr += fmt.Sprintf("%s: \"%s\" | %v minutes left\n", pomoWithTimeLeft.Username, pomoWithTimeLeft.Task, math.Round(pomoWithTimeLeft.TimeLeft))
-	}
-	return stringRepr
+	return allPomosWithTimeLeft
 }
 
 func writeToFile() {
 	var fileName string = "pomoboard.txt"
 
 	for shouldWriteToFile {
-		var stringRepr string = getRunningPomos()
+		pomosWithTimeLeft := getRunningPomos()
+
+		var stringRepr string
+		for _, pomoWithTimeLeft := range pomosWithTimeLeft {
+			stringRepr += fmt.Sprintf("%s: \"%s\" | %v minutes left\n", pomoWithTimeLeft.Username, pomoWithTimeLeft.Task, math.Round(pomoWithTimeLeft.TimeLeft))
+		}
 
 		err := ioutil.WriteFile(fileName, []byte(stringRepr), 0644)
 		if err != nil {
@@ -184,5 +221,4 @@ func writeToFile() {
 		// overwrite the whole file every 5 seconds
 		time.Sleep(time.Second * 5)
 	}
-
 }

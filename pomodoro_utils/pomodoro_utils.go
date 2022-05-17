@@ -70,11 +70,16 @@ func PomoLoop(bot *twitch_api_wrapper.Bot) {
 			timeLeft := time.Until(time.Unix(endTimestampInt, 0)).Minutes()
 
 			if timeLeft <= 0 {
-				go terminatePomo(currentPomo.Username)
+				go func() {
+					err := TerminatePomo(currentPomo.Username, false)
+					if err != nil {
+						panic(err)
+					}
+				}()
 				msg := fmt.Sprintf("@%s the time is up on your pomodoro session", currentPomo.Username)
 				err := bot.Send(consts.Channel, msg)
 				if err != nil {
-					log.Fatalln(err)
+					panic(err)
 				}
 			}
 		}
@@ -116,18 +121,52 @@ func FetchDbPomos() []Pomo {
 	return allPomos
 }
 
-func terminatePomo(username string) {
+func EditUserPomo(username string, newTask string, shouldSendMessage bool) error {
 	db, err := sql.Open("sqlite3", "./twitch_bot.sqlite")
 	if err != nil {
-		log.Fatalln(err)
+		return err
+	}
+	defer db.Close()
+	statement, err := db.Prepare("UPDATE pomodoros SET task=? WHERE username=?")
+	if err != nil {
+		return err
+	}
+	_, err = statement.Exec(newTask, username)
+	if err != nil {
+		return err
+	}
+
+	if shouldSendMessage {
+		msg := fmt.Sprintf("@%s your task was edited to \"%s\"", username, newTask)
+		err := consts.Bot.Send(consts.Channel, msg)
+		if err != nil {
+			panic(err)
+		}
+	}
+	return nil
+}
+
+func TerminatePomo(username string, shouldSendMessage bool) error {
+	db, err := sql.Open("sqlite3", "./twitch_bot.sqlite")
+	if err != nil {
+		return err
 	}
 	defer db.Close()
 	statement, err := db.Prepare("DELETE FROM pomodoros WHERE username=?")
 	if err != nil {
-		log.Fatalln(err)
+		return err
 	}
 	_, err = statement.Exec(username)
 	if err != nil {
-		log.Fatalln(err)
+		return err
 	}
+
+	if shouldSendMessage {
+		msg := fmt.Sprintf("@%s your pomodoro session was cancelled", username)
+		err := consts.Bot.Send(consts.Channel, msg)
+		if err != nil {
+			panic(err)
+		}
+	}
+	return nil
 }
