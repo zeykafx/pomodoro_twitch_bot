@@ -2,9 +2,7 @@ package pomobot
 
 import (
 	"fmt"
-	"github.com/joho/godotenv"
 	"log"
-	"os"
 	"pomodoro_twitch_bot/consts"
 	"pomodoro_twitch_bot/logger"
 	"pomodoro_twitch_bot/pomodoro_utils"
@@ -29,12 +27,12 @@ type CommandHandler struct {
 // - [prefix]pomo add/remove [time]
 
 func InitBot() {
-	err := godotenv.Load(".env")
-	CheckErr(err)
-	TOKEN := os.Getenv("TOKEN")
+	//err := godotenv.Load(".env")
+	//CheckErr(err)
+	//TOKEN := os.Getenv("TOKEN")
 
 	// creating the bot
-	consts.Bot = twitch_api_wrapper.NewBot(TOKEN, "pomobot", []string{consts.Channel})
+	consts.Bot = twitch_api_wrapper.NewBot(consts.Token, "pomobot", []string{consts.Channel})
 
 	consts.Bot.OnLogin(func(bot *twitch_api_wrapper.Bot) {
 		logger.Log("Logged in!")
@@ -60,6 +58,13 @@ func InitBot() {
 	})
 	// run the bot
 	consts.Bot.Run()
+}
+
+func StopBot() {
+	if consts.Bot != nil {
+		consts.Bot.Client.Close()
+	}
+	logger.Log("closed bot connection.")
 }
 
 // Accept is used to add a function as a command handler

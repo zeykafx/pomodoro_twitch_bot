@@ -15,6 +15,7 @@ var (
 	Bot     *twitch_api_wrapper.Bot
 	Prefix  string = "!"
 	Channel string = ""
+	Token   string = ""
 )
 
 func LoadPrefix(w *astilectron.Window) {
@@ -23,14 +24,16 @@ func LoadPrefix(w *astilectron.Window) {
 		if err := bootstrap.SendMessage(w, "NO SETTINGS", "NO SETTINGS SET"); err != nil {
 			panic(err)
 		}
-	}
-	err = godotenv.Load(".env")
-	for err != nil { // while the error isn't nil
-		time.Sleep(time.Second * 10) // sleep 10 secs until the user inputs the settings in the ui
+
 		err = godotenv.Load(".env")
+		for err != nil { // while the error isn't nil
+			time.Sleep(time.Second * 1) // sleep 1 secs until the user inputs the settings in the ui
+			err = godotenv.Load(".env")
+		}
 	}
 
 	Prefix = os.Getenv("PREFIX")
 	logger.Log(fmt.Sprintf("Using %s as prefix", Prefix))
 	Channel = os.Getenv("CHANNEL")
+	Token = os.Getenv("TOKEN")
 }

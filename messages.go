@@ -11,6 +11,7 @@ import (
 	"os"
 	"os/exec"
 	"pomodoro_twitch_bot/consts"
+	"pomodoro_twitch_bot/pomobot"
 	"pomodoro_twitch_bot/pomodoro_utils"
 	"pomodoro_twitch_bot/setup"
 	"runtime"
@@ -127,6 +128,10 @@ func handleMessages(w *astilectron.Window, m bootstrap.MessageIn) (payload inter
 		if err != nil {
 			return "didnt' save", err
 		}
+
+		pomobot.StopBot()
+		consts.LoadPrefix(w)
+		pomobot.InitBot()
 		return "saved settings", nil
 
 	case "GET_SETTINGS":

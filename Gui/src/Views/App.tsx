@@ -44,10 +44,8 @@ function App() {
         astielectronReady = true;
     });
 
-
     const [settingsAlert, setSettingsAlert] = useState<boolean>(false);
     const [currentPage, setCurrentPage] = useState<number>(0); // 0 = dashboard, 1 = settings
-
 
     return (
         <>
