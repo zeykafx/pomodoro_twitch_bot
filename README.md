@@ -28,8 +28,7 @@ The bot will read chat and respond to commands. It also writes all the running p
 When you see a `/` here it means that either words works and do the same thing, you can set `[prefix]` to whatever you want from the settings.
 
 # Credits
-This bot was made by ZeykaFX, originally made to be used by [ellenbearli](https://www.twitch.tv/ellenbearli).
-
+This bot was made by ZeykaFX.
 It was heavily inspired by [RumpleStudy](https://www.twitch.tv/rumplestudy)'s private pomo bot.
 
 # Images
